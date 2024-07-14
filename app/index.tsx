@@ -16,7 +16,7 @@ interface TodoItem {
   id: string;
   text: string;
   completed: boolean;
-  createdAt: Date;
+  createdAt?: string;
 }
 
 export default function Todo() {
@@ -41,7 +41,6 @@ export default function Todo() {
 
   const addTodo = () => {
     if (newTodo.trim()) {
-      setLoading(true);
       fetch("http://localhost:5000/todos", {
         method: "POST",
         headers: {
@@ -53,34 +52,28 @@ export default function Todo() {
         .then((data) => {
           setTodos([...todos, data]);
           setNewTodo("");
-          setLoading(false);
         })
         .catch((error) => {
           setError("Error adding todo");
-          setLoading(false);
         });
     }
   };
 
   const deleteTodo = (id: string) => {
-    setLoading(true);
     fetch(`http://localhost:5000/todos/${id}`, {
       method: "DELETE",
     })
       .then(() => {
         setTodos(todos.filter((todo) => todo.id !== id));
-        setLoading(false);
       })
       .catch((error) => {
         setError("Error deleting todo");
-        setLoading(false);
       });
   };
 
   const toggleTodo = (id: string) => {
     const todo = todos.find((todo) => todo.id === id);
     if (todo) {
-      setLoading(true);
       fetch(`http://localhost:5000/todos/${id}`, {
         method: "PUT",
         headers: {
@@ -91,11 +84,9 @@ export default function Todo() {
         .then((response) => response.json())
         .then((data) => {
           setTodos(todos.map((todo) => (todo.id === id ? data : todo)));
-          setLoading(false);
         })
         .catch((error) => {
           setError("Error toggling todo");
-          setLoading(false);
         });
     }
   };
@@ -110,7 +101,7 @@ export default function Todo() {
 
   if (error) {
     Alert.alert("Error", error);
-    setError(""); // Reset error after showing alert
+    setError("");
   }
 
   return (
