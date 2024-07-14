@@ -1,19 +1,21 @@
 import express, { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { body, validationResult } from 'express-validator';
+const cors = require('cors');
 
 const app = express();
 const prisma = new PrismaClient();
 
+app.use(cors()); // Just to test on browser
 app.use(express.json());
 
 app.post('/register', async (req: Request, res: Response) => {
-  // Implement registration logic
+  // TODO: Implement register logic
   res.send('Register endpoint');
 });
 
 app.post('/login', async (req: Request, res: Response) => {
-  // Implement login logic
+  // TODO: Implement login logic
   res.send('Login endpoint');
 });
 
@@ -43,7 +45,7 @@ app.post('/todos', [
     });
     res.json(newTodo);
   } catch (error) {
-    console.log("Alyapany", error);
+    console.log(error);
     res.status(500).json({ error: 'Error adding todo' });
   }
 });
